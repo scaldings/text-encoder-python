@@ -1,5 +1,9 @@
 import string
-import random as rand
+import random
+
+
+def get_numbers():
+    return list('1234567890')
 
 
 def get_uppercase_array():
@@ -28,7 +32,7 @@ def is_lowercase(letter):
 
 def encode_text(content: str):
     transformed_text = ''
-    random_int = rand.randint(0, len(get_lowercase_array()) - 1)
+    random_int = random.randint(0, len(get_lowercase_array()) - 1)
     word_split = get_lowercase_array()[random_int - 1]
     word_split += word_split
     for x in content:
@@ -44,14 +48,51 @@ def encode_text(content: str):
             transformed_text += to_append + word_split
         else:
             transformed_text += str(x)
-    return transformed_text
+
+    encoded_text = ''
+    for x in transformed_text:
+        if is_uppercase(x):
+            index, number = get_uppercase_array().index(x), ''
+            if index <= 9:
+                number = '0' + '%20%20' + str(index) + '-'
+            else:
+                number = str(index) + '-'
+            encoded_text += number
+        elif is_lowercase(x):
+            index, number = get_lowercase_array().index(x), ''
+            if index <= 9:
+                number = '0' + str(index) + '-'
+            else:
+                number = str(index) + '-'
+            encoded_text += number
+        else:
+            encoded_text += x
+    return encoded_text
 
 
 def decode_text(content: str):
+    encoded_text, semi_decoded_text = content.split('-'), ''
+    print(encoded_text)
+    for x in encoded_text:
+        is_letter_lowercase = False
+        for y in get_numbers():
+            if y in x:
+                is_letter_lowercase = True
+
+        if '%20%20' in x:
+            index = x.replace('%20%20', '')
+            letter = get_uppercase_array()[int(index)]
+            semi_decoded_text += letter
+        elif is_letter_lowercase:
+            letter = get_lowercase_array()[int(x)]
+            semi_decoded_text += letter
+        else:
+            semi_decoded_text += x
+
     untransformed_text = ''
-    word_split = get_lowercase_array()[get_lowercase_array().index(content[0].lower()) - 1]
+    word_split = get_lowercase_array()[get_lowercase_array().index(semi_decoded_text[0].lower()) - 1]
     word_split += word_split
-    words = content.split(' ')
+    words = semi_decoded_text.split(' ')
     for x in words:
         letters_array = x.split(word_split)
         letters_array.pop(len(letters_array) - 1)
