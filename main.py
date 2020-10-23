@@ -2,10 +2,6 @@ import string
 import random
 
 
-def get_numbers():
-    return list('1234567890')
-
-
 def get_uppercase_array():
     alphabet_uppercase = string.ascii_uppercase
     uppercase_array = []
